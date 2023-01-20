@@ -1,8 +1,8 @@
-﻿namespace VacationRental.Api.Models
+﻿using VacationRental.Service.Contract.Response;
+
+namespace VacationRental.Api.Models
 {
-    public class RentalViewModel
+    public class RentalViewModel : RentalResponse
     {
-        public int Id { get; set; }
-        public int Units { get; set; }
     }
 }

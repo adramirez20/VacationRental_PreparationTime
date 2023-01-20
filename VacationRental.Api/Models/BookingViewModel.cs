@@ -1,12 +1,8 @@
-﻿using System;
+﻿using VacationRental.Service.Contract.Response;
 
 namespace VacationRental.Api.Models
 {
-    public class BookingViewModel
+    public class BookingViewModel : BookingResponse
     {
-        public int Id { get; set; }
-        public int RentalId { get; set; }
-        public DateTime Start { get; set; }
-        public int Nights { get; set; }
     }
 }
