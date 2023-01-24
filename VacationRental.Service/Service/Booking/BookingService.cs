@@ -77,47 +77,21 @@ namespace VacationRental.Service.Service.Booking
                 avalibleRentals = 1;
             }
            
-            var occupiedRentalUnits = new List<int>();
+            
             RentalResponse rental = _rentalData.First(r => r.Key == newBooking.RentalId).Value;
             var blockingDays = rental.PreparationDays;
 
             var bookingsForRental = _bookingData.Values.Where(x => x.RentalId == newBooking.RentalId);
 
-            foreach (var booking in bookingsForRental)
-            {
-                var isOccupied =
-                    (booking.Start <= newBooking.Start.Date 
-                     && booking.Start.AddDays(booking.Nights + blockingDays) > newBooking.Start.Date) 
-                     || (booking.Start < newBooking.Start.AddDays(newBooking.Nights + blockingDays) && booking.Start.AddDays(booking.Nights) >= newBooking.Start.AddDays(newBooking.Nights + blockingDays)) 
-                     || (booking.Start > newBooking.Start && booking.Start.AddDays(booking.Nights + blockingDays) < newBooking.Start.AddDays(newBooking.Nights + blockingDays));
-
-                if (isOccupied)
-                {
-                    occupiedRentalUnits.Add(booking.Unit);
-                }
-            }
+            var occupiedRentalUnits = AvailableRentalExt.GetAvailableRental(newBooking.Start, newBooking.Nights, bookingsForRental, blockingDays);
 
             if (occupiedRentalUnits.Count < rental.Units)
             {
-                int nextAvailableUnit = this.GetAvailableUnit(
-                    occupiedRentalUnits: occupiedRentalUnits,
-                    rentalUnits: rental.Units);
+                int nextAvailableUnit = AvailableRentalExt.GetAvailableUnit(occupiedRentalUnits, rental.Units);
 
                 avalibleRentals = nextAvailableUnit;
             }
         }
 
-        private int GetAvailableUnit(List<int> occupiedRentalUnits, int rentalUnits)
-        {
-            for (int i = 1; i <= rentalUnits; i++)
-            {
-                if (occupiedRentalUnits.Where(x => x == i).FirstOrDefault() == 0)
-                {
-                    return i;
-                }
-            }
-
-            return 0;
-        }
     }
 }

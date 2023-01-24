@@ -110,49 +110,25 @@ namespace VacationRental.Service.Service.Rental
                 avalibleRentalsCount = 1;
             }
 
-            var ocupiedUnits = new List<int>();
+            
             int blockingDays = tempRental.PreparationDays;
 
             var bookingsForRental = tempBookingsData.Values.Where(x => x.RentalId == newBooking.RentalId);
 
-            foreach (var booking in bookingsForRental)
-            {
-                bool isOcupied =
-                    (booking.Start <= newBooking.Start.Date && booking.Start.AddDays(booking.Nights + blockingDays) >
-                    newBooking.Start.Date) || (booking.Start < newBooking.Start.AddDays(newBooking.Nights + blockingDays) &&
-                    booking.Start.AddDays(booking.Nights) >= newBooking.Start.AddDays(newBooking.Nights + blockingDays)) ||
-                    (booking.Start > newBooking.Start && booking.Start.AddDays(booking.Nights + blockingDays) <
-                    newBooking.Start.AddDays(newBooking.Nights + blockingDays));
+            var occupiedRentalUnits = AvailableRentalExt.GetAvailableRental(newBooking.Start, newBooking.Nights, bookingsForRental, blockingDays);
 
-                if (isOcupied)
-                {
-                    ocupiedUnits.Add(booking.Unit);
-                }
-            }
-
-            bool isAvailable = ocupiedUnits.Count < tempRental.Units;
+            bool isAvailable = occupiedRentalUnits.Count < tempRental.Units;
 
             if (isAvailable)
             {
-                int nextAvailableUnit = this.GetAvailableUnit(ocupiedUnits, tempRental.Units);
+                int nextAvailableUnit = AvailableRentalExt.GetAvailableUnit(occupiedRentalUnits, tempRental.Units);
 
                 avalibleRentalsCount = nextAvailableUnit;
             }
 
         }
 
-        private int GetAvailableUnit(List<int> occupiedRentalUnits, int rentalUnits)
-        {
-            for (int i = 1; i <= rentalUnits; i++)
-            {
-                if (occupiedRentalUnits.Where(x => x == i).FirstOrDefault() == 0)
-                {
-                    return i;
-                }
-            }
-
-            return 0;
-        }
+       
 
     }
 }
