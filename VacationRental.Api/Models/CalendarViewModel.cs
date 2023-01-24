@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using VacationRental.Service.Contract.Response;
 
 namespace VacationRental.Api.Models
 {
-    public class CalendarViewModel
+    public class CalendarViewModel : CalendarResponse
     {
-        public int RentalId { get; set; }
-        public List<CalendarDateViewModel> Dates { get; set; }
+
     }
 }

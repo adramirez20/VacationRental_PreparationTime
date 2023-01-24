@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VacationRental.Api\VacationRental.Api.csproj" />
+    <ProjectReference Include="..\VacationRental.Service\VacationRental.Service.csproj" />
   </ItemGroup>
 
 </Project>
